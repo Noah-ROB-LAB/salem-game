@@ -1,0 +1,987 @@
+/* Salem: Juicio de Brujas - Estilo Principal Gótico */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=MedievalSharp&family=Inter:wght@300;400;600;700&display=swap');
+
+:root {
+  --bg-primary: #0a0d13;
+  --bg-secondary: #12161f;
+  --bg-tertiary: #1b212c;
+  --bg-elevated: #242c3b;
+  --border-color: #2f3847;
+  --border-glow: #3d4a60;
+
+  --town-color: #2ecc71;
+  --town-dark: #27ae60;
+  --coven-color: #9b59b6;
+  --coven-dark: #8e44ad;
+  --neutral-color: #e67e22;
+  --blood-red: #e74c3c;
+  --blood-dark: #c0392b;
+  --gold-accent: #f1c40f;
+  --parchment-bg: #f5eed7;
+  --ink-color: #2c251a;
+
+  --text-main: #f0f3f8;
+  --text-muted: #8b9bb4;
+  --text-dim: #5c6b82;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+
+  --font-serif: 'Cinzel', serif;
+  --font-gothic: 'MedievalSharp', cursive;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.8);
+  --shadow-glow: 0 0 20px rgba(155, 89, 182, 0.3);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--bg-primary);
+  background-image: 
+    radial-gradient(circle at 50% 10%, rgba(33, 44, 63, 0.5) 0%, transparent 60%),
+    radial-gradient(circle at 10% 90%, rgba(155, 89, 182, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 90% 90%, rgba(231, 76, 60, 0.08) 0%, transparent 50%);
+  color: var(--text-main);
+  font-family: var(--font-sans);
+  min-height: 100vh;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Scrollbars estilizados */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: var(--radius-full);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border-glow);
+}
+
+/* ==================== HEADER ==================== */
+header.app-header {
+  height: 64px;
+  background: rgba(18, 22, 31, 0.9);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.brand-icon {
+  font-size: 28px;
+  filter: drop-shadow(0 0 8px rgba(241, 196, 15, 0.4));
+}
+
+.brand-text h1 {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  font-weight: 900;
+  letter-spacing: 2px;
+  color: #fff;
+  text-transform: uppercase;
+}
+
+.brand-text span {
+  font-size: 0.72rem;
+  letter-spacing: 1.5px;
+  color: var(--gold-accent);
+  display: block;
+}
+
+.header-center {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.room-badge {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+}
+
+.room-code-tag {
+  font-family: monospace;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--gold-accent);
+  letter-spacing: 1px;
+}
+
+.btn-icon-tiny {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+}
+
+.btn-icon-tiny:hover {
+  color: #fff;
+  background: var(--bg-elevated);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ==================== BOTONES ==================== */
+.btn {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 9px 18px;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  user-select: none;
+  text-decoration: none;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #8e44ad, #6c3483);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(142, 68, 173, 0.4);
+}
+.btn-primary:hover {
+  background: linear-gradient(135deg, #9b59b6, #7d3c98);
+  box-shadow: 0 6px 18px rgba(142, 68, 173, 0.6);
+}
+
+.btn-town {
+  background: linear-gradient(135deg, #27ae60, #1e8449);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(39, 174, 96, 0.3);
+}
+.btn-town:hover {
+  background: linear-gradient(135deg, #2ecc71, #229954);
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, #c0392b, #922b21);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(192, 57, 43, 0.4);
+}
+.btn-danger:hover {
+  background: linear-gradient(135deg, #e74c3c, #a93226);
+}
+
+.btn-secondary {
+  background: var(--bg-tertiary);
+  color: var(--text-main);
+  border-color: var(--border-color);
+}
+.btn-secondary:hover {
+  background: var(--bg-elevated);
+  border-color: var(--border-glow);
+  color: #fff;
+}
+
+.btn-gold {
+  background: linear-gradient(135deg, #f39c12, #d68910);
+  color: #1a1607;
+  font-weight: 700;
+  box-shadow: 0 4px 14px rgba(243, 156, 18, 0.35);
+}
+.btn-gold:hover {
+  background: linear-gradient(135deg, #f1c40f, #d4ac0d);
+}
+
+.btn-lg {
+  padding: 14px 28px;
+  font-size: 1.05rem;
+  border-radius: var(--radius-lg);
+}
+
+/* ==================== CONTENEDORES Y VISTAS ==================== */
+main.main-container {
+  flex: 1;
+  display: flex;
+  position: relative;
+  overflow: hidden;
+}
+
+.view-section {
+  display: none;
+  width: 100%;
+  height: calc(100vh - 64px);
+}
+
+.view-section.active {
+  display: flex;
+}
+
+/* ==================== VISTA 1: HOME & LOBBY ==================== */
+#view-lobby {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 20px;
+  overflow-y: auto;
+}
+
+.lobby-hero {
+  text-align: center;
+  max-width: 640px;
+  margin-bottom: 32px;
+}
+
+.lobby-hero h2 {
+  font-family: var(--font-serif);
+  font-size: 2.4rem;
+  letter-spacing: 2px;
+  color: #fff;
+  margin-bottom: 12px;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+}
+
+.lobby-hero p {
+  color: var(--text-muted);
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+.cards-container {
+  display: flex;
+  gap: 24px;
+  max-width: 840px;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .cards-container {
+    flex-direction: column;
+  }
+}
+
+.lobby-card {
+  flex: 1;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.lobby-card:hover {
+  border-color: var(--border-glow);
+}
+
+.lobby-card h3 {
+  font-family: var(--font-serif);
+  font-size: 1.35rem;
+  margin-bottom: 8px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.lobby-card p.subtitle {
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 18px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.form-input {
+  width: 100%;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  color: #fff;
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-input:focus {
+  border-color: var(--coven-color);
+  box-shadow: 0 0 0 3px rgba(155, 89, 182, 0.2);
+}
+
+.avatar-selector {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.avatar-option {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  background: var(--bg-tertiary);
+  border: 2px solid var(--border-color);
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.avatar-option:hover {
+  background: var(--bg-elevated);
+  transform: translateY(-2px);
+}
+
+.avatar-option.selected {
+  border-color: var(--gold-accent);
+  background: rgba(241, 196, 15, 0.15);
+  box-shadow: 0 0 10px rgba(241, 196, 15, 0.3);
+}
+
+/* ==================== SALA DE ESPERA (IN-ROOM LOBBY) ==================== */
+.in-room-container {
+  display: none;
+  width: 100%;
+  max-width: 980px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  box-shadow: var(--shadow-lg);
+  flex-direction: column;
+}
+
+.in-room-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 20px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.in-room-header-left h3 {
+  font-family: var(--font-serif);
+  font-size: 1.6rem;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.share-banner {
+  background: rgba(241, 196, 15, 0.1);
+  border: 1px solid rgba(241, 196, 15, 0.3);
+  border-radius: var(--radius-md);
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.share-banner-text {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.95rem;
+}
+
+.players-lobby-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.player-slot {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  position: relative;
+  transition: all 0.2s;
+}
+
+.player-slot.host-slot {
+  border-color: var(--gold-accent);
+}
+
+.player-slot.bot-slot {
+  border-style: dashed;
+}
+
+.player-slot-avatar {
+  font-size: 32px;
+  width: 48px;
+  height: 48px;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.player-slot-info {
+  flex: 1;
+  overflow: hidden;
+}
+
+.player-slot-name {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.player-slot-badge {
+  font-size: 0.72rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  display: inline-block;
+  margin-top: 4px;
+  font-weight: 600;
+}
+
+.badge-host {
+  background: rgba(241, 196, 15, 0.2);
+  color: var(--gold-accent);
+}
+
+.badge-bot {
+  background: rgba(149, 165, 166, 0.2);
+  color: #bdc3c7;
+}
+
+.badge-you {
+  background: rgba(46, 204, 113, 0.2);
+  color: var(--town-color);
+}
+
+.btn-remove-bot {
+  background: transparent;
+  border: none;
+  color: var(--blood-red);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: transform 0.2s;
+}
+.btn-remove-bot:hover {
+  transform: scale(1.2);
+}
+
+.in-room-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid var(--border-color);
+  padding-top: 20px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.lobby-controls-left {
+  display: flex;
+  gap: 10px;
+}
+
+/* ==================== VISTA 2: PARTIDA EN JUEGO (GAME) ==================== */
+#view-game {
+  width: 100%;
+  height: calc(100vh - 64px);
+  display: none;
+  flex-direction: row;
+}
+
+.game-main-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  position: relative;
+  background: radial-gradient(circle at 50% 30%, rgba(27, 33, 44, 0.8) 0%, rgba(10, 13, 19, 0.95) 100%);
+}
+
+/* Barra de Fase y Temporizador */
+.phase-bar {
+  background: rgba(18, 22, 31, 0.85);
+  border-bottom: 1px solid var(--border-color);
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  backdrop-filter: blur(8px);
+}
+
+.phase-pill {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.phase-icon {
+  font-size: 26px;
+}
+
+.phase-title {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.phase-desc {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.timer-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-full);
+  padding: 6px 16px;
+}
+
+.timer-box.timer-urgent {
+  border-color: var(--blood-red);
+  background: rgba(231, 76, 60, 0.15);
+  animation: pulse-urgent 1s infinite alternate;
+}
+
+@keyframes pulse-urgent {
+  from { box-shadow: 0 0 5px rgba(231, 76, 60, 0.3); }
+  to { box-shadow: 0 0 15px rgba(231, 76, 60, 0.7); }
+}
+
+.timer-number {
+  font-family: monospace;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #fff;
+  min-width: 32px;
+  text-align: center;
+}
+
+/* Plaza de Salem (Town Square Arena) */
+.town-square {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  position: relative;
+}
+
+.citizens-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 20px;
+  max-width: 900px;
+  width: 100%;
+}
+
+.citizen-card {
+  background: var(--bg-secondary);
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  user-select: none;
+}
+
+.citizen-card:hover:not(.dead):not(.self) {
+  border-color: var(--gold-accent);
+  transform: translateY(-4px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
+}
+
+.citizen-card.selected-target {
+  border-color: var(--coven-color);
+  background: rgba(155, 89, 182, 0.15);
+  box-shadow: 0 0 16px rgba(155, 89, 182, 0.4);
+}
+
+.citizen-card.accused {
+  border-color: var(--blood-red);
+  background: rgba(231, 76, 60, 0.18);
+  box-shadow: 0 0 20px rgba(231, 76, 60, 0.5);
+  animation: pulse-accused 1.2s infinite alternate;
+}
+
+@keyframes pulse-accused {
+  from { transform: scale(1); }
+  to { transform: scale(1.04); }
+}
+
+.citizen-card.dead {
+  opacity: 0.5;
+  filter: grayscale(80%);
+  border-color: #3e4451;
+  cursor: not-allowed;
+}
+
+.citizen-avatar {
+  font-size: 38px;
+  margin-bottom: 8px;
+  position: relative;
+}
+
+.citizen-name {
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  margin-bottom: 4px;
+}
+
+.citizen-role-badge {
+  font-size: 0.72rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vote-count-indicator {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background: var(--blood-red);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+  border: 2px solid var(--bg-primary);
+}
+
+.status-icon-badge {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  font-size: 16px;
+}
+
+/* Barra de acciones inferior (Bottom Action Deck) */
+.action-deck {
+  background: rgba(18, 22, 31, 0.95);
+  border-top: 1px solid var(--border-color);
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.action-deck-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.my-role-compact {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.my-role-compact:hover {
+  border-color: var(--border-glow);
+  background: var(--bg-elevated);
+}
+
+.my-role-icon {
+  font-size: 26px;
+}
+
+.my-role-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.my-role-name {
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.my-role-faction {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  font-weight: 600;
+}
+
+.action-prompt-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.95rem;
+}
+
+.action-buttons-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ==================== PANEL LATERAL DE CHAT ==================== */
+.chat-sidebar {
+  width: 360px;
+  background: var(--bg-secondary);
+  border-left: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+@media (max-width: 900px) {
+  #view-game {
+    flex-direction: column;
+  }
+  .chat-sidebar {
+    width: 100%;
+    height: 320px;
+    border-left: none;
+    border-top: 1px solid var(--border-color);
+  }
+}
+
+.chat-tabs {
+  display: flex;
+  background: var(--bg-primary);
+  border-bottom: 1px solid var(--border-color);
+  overflow-x: auto;
+}
+
+.chat-tab {
+  padding: 10px 14px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+}
+
+.chat-tab:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.chat-tab.active {
+  color: #fff;
+  border-bottom-color: var(--gold-accent);
+  background: rgba(241, 196, 15, 0.05);
+}
+
+.chat-messages {
+  flex: 1;
+  padding: 14px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.chat-msg {
+  font-size: 0.88rem;
+  line-height: 1.45;
+  word-break: break-word;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  background: rgba(27, 33, 44, 0.4);
+}
+
+.chat-msg.system {
+  background: rgba(241, 196, 15, 0.1);
+  border-left: 3px solid var(--gold-accent);
+  font-style: italic;
+  color: #f7dc6f;
+}
+
+.chat-msg.coven {
+  background: rgba(155, 89, 182, 0.15);
+  border-left: 3px solid var(--coven-color);
+}
+
+.chat-msg.jail {
+  background: rgba(52, 152, 219, 0.15);
+  border-left: 3px solid #3498db;
+}
+
+.chat-msg.dead {
+  background: rgba(149, 165, 166, 0.15);
+  border-left: 3px solid #95a5a6;
+  opacity: 0.85;
+}
+
+.chat-sender {
+  font-weight: 700;
+  margin-right: 6px;
+  color: #fff;
+}
+
+.chat-input-bar {
+  padding: 12px 14px;
+  background: var(--bg-tertiary);
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  gap: 8px;
+}
+
+.chat-input {
+  flex: 1;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 8px 12px;
+  color: #fff;
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  outline: none;
+}
+
+.chat-input:focus {
+  border-color: var(--gold-accent);
+}
+
+/* ==================== TOASTS & NOTIFICACIONES ==================== */
+.toast-container {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: none;
+}
+
+.toast {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-color);
+  color: #fff;
+  padding: 12px 18px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: slide-in-toast 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: auto;
+}
+
+@keyframes slide-in-toast {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}

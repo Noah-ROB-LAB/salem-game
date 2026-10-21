@@ -1,0 +1,30 @@
+{
+  "name": "town-of-salem-game",
+  "version": "1.0.0",
+  "description": "Juego multijugador estilo Town of Salem 2 para jugar con amigos desde el navegador",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "share": "node server/index.js --tunnel",
+    "tunnel": "node bin/share.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "town-of-salem",
+    "mafia",
+    "werewolf",
+    "social-deduction",
+    "multiplayer",
+    "websockets"
+  ],
+  "author": "Antigravity",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^5.2.1",
+    "localtunnel": "^2.0.2",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.4"
+  }
+}

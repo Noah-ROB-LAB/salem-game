@@ -1,0 +1,453 @@
+/* Salem: Componentes Específicos y Modales */
+
+/* ==================== MODAL BASE ==================== */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(4, 6, 9, 0.85);
+  backdrop-filter: blur(8px);
+  z-index: 500;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal-backdrop.open {
+  display: flex;
+}
+
+.modal-dialog {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  max-width: 600px;
+  width: 100%;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: modal-pop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modal-pop {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.modal-header {
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-title {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-close-modal {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 20px;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: var(--radius-sm);
+  transition: all 0.2s;
+}
+
+.btn-close-modal:hover {
+  color: #fff;
+  background: var(--bg-elevated);
+}
+
+.modal-body {
+  padding: 24px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.modal-footer {
+  padding: 16px 24px;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+/* ==================== EL TESTAMENTO (PERGAMINO) ==================== */
+.parchment-paper {
+  background: #f4ecd8;
+  background-image: 
+    radial-gradient(circle at 50% 50%, rgba(220, 200, 160, 0.3) 0%, rgba(180, 150, 100, 0.3) 100%),
+    repeating-linear-gradient(transparent, transparent 31px, rgba(160, 130, 90, 0.15) 32px);
+  border: 1px solid #b89758;
+  border-radius: var(--radius-md);
+  box-shadow: 
+    inset 0 0 30px rgba(120, 80, 30, 0.25),
+    0 10px 30px rgba(0, 0, 0, 0.5);
+  padding: 24px;
+  color: #2b2013;
+  font-family: 'MedievalSharp', cursive, serif;
+}
+
+.parchment-header {
+  text-align: center;
+  border-bottom: 2px dashed #9d7b42;
+  padding-bottom: 12px;
+  margin-bottom: 16px;
+}
+
+.parchment-header h3 {
+  font-size: 1.5rem;
+  color: #3b2811;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.parchment-header p {
+  font-size: 0.85rem;
+  color: #6a4f29;
+  font-style: italic;
+}
+
+.will-textarea {
+  width: 100%;
+  height: 240px;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: 'MedievalSharp', cursive, serif;
+  font-size: 1.1rem;
+  line-height: 32px;
+  color: #26190a;
+  resize: vertical;
+}
+
+/* ==================== PATÍBULO Y JUICIO (TRIAL STAND) ==================== */
+.trial-banner-box {
+  background: linear-gradient(180deg, rgba(231, 76, 60, 0.25) 0%, rgba(18, 22, 31, 0.95) 100%);
+  border: 2px solid var(--blood-red);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  text-align: center;
+  max-width: 580px;
+  width: 100%;
+  box-shadow: 0 0 40px rgba(231, 76, 60, 0.3);
+  margin-bottom: 20px;
+}
+
+.trial-stand-icon {
+  font-size: 48px;
+  margin-bottom: 10px;
+  animation: swing 2s ease-in-out infinite alternate;
+}
+
+@keyframes swing {
+  from { transform: rotate(-5deg); }
+  to { transform: rotate(5deg); }
+}
+
+.trial-accused-name {
+  font-family: var(--font-serif);
+  font-size: 1.8rem;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.trial-stage-label {
+  font-size: 0.95rem;
+  color: #e74c3c;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.trial-voting-buttons {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.btn-trial-guilty {
+  background: linear-gradient(135deg, #c0392b, #962d22);
+  color: #fff;
+  font-size: 1.1rem;
+  padding: 14px 28px;
+  border-radius: var(--radius-md);
+  border: 1px solid #e74c3c;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn-trial-guilty:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(231, 76, 60, 0.6);
+}
+
+.btn-trial-innocent {
+  background: linear-gradient(135deg, #27ae60, #1e8449);
+  color: #fff;
+  font-size: 1.1rem;
+  padding: 14px 28px;
+  border-radius: var(--radius-md);
+  border: 1px solid #2ecc71;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(46, 204, 113, 0.35);
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn-trial-innocent:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(46, 204, 113, 0.55);
+}
+
+.btn-trial-abstain {
+  background: var(--bg-tertiary);
+  color: var(--text-muted);
+  font-size: 1rem;
+  padding: 14px 20px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-trial-abstain:hover {
+  color: #fff;
+  border-color: var(--border-glow);
+}
+
+/* ==================== RESUMEN DE AMANECER (DAWN OVERLAY) ==================== */
+.dawn-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  max-width: 640px;
+  width: 100%;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  animation: modal-pop 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dawn-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 14px;
+}
+
+.dawn-header-icon {
+  font-size: 36px;
+}
+
+.dawn-header-text h3 {
+  font-family: var(--font-serif);
+  font-size: 1.4rem;
+  color: #fff;
+}
+
+.death-entry {
+  background: var(--bg-tertiary);
+  border: 1px solid rgba(231, 76, 60, 0.4);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.death-entry-name {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.death-entry-reason {
+  color: #e74c3c;
+  font-size: 0.9rem;
+}
+
+/* ==================== CEMENTERIO (GRAVEYARD) ==================== */
+.graveyard-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.tombstone {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-left: 4px solid var(--border-glow);
+  border-radius: var(--radius-md);
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  transition: all 0.2s;
+}
+
+.tombstone:hover {
+  border-color: var(--border-glow);
+  background: var(--bg-elevated);
+}
+
+.tombstone-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.tombstone-name {
+  font-weight: 700;
+  color: #fff;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tombstone-meta {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* ==================== PANTALLA DE VICTORIA (GAME OVER) ==================== */
+.victory-card {
+  background: var(--bg-secondary);
+  border: 2px solid var(--gold-accent);
+  border-radius: var(--radius-lg);
+  padding: 36px 32px;
+  max-width: 720px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 0 50px rgba(241, 196, 15, 0.35);
+  animation: modal-pop 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.victory-title {
+  font-family: var(--font-serif);
+  font-size: 2.2rem;
+  color: var(--gold-accent);
+  letter-spacing: 2px;
+}
+
+.victory-desc {
+  color: var(--text-muted);
+  font-size: 1.05rem;
+  line-height: 1.5;
+}
+
+.recap-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  text-align: left;
+}
+
+.recap-table th {
+  padding: 10px 14px;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.recap-table td {
+  padding: 12px 14px;
+  font-size: 0.9rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* ==================== GUÍA DE ROLES ==================== */
+.role-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.role-tab-btn {
+  flex: 1;
+  padding: 8px 12px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  color: var(--text-muted);
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+}
+
+.role-tab-btn.active {
+  background: var(--bg-elevated);
+  color: #fff;
+  border-color: var(--gold-accent);
+}
+
+.role-guide-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 14px;
+}
+
+.role-guide-card {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.role-guide-card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.role-guide-icon {
+  font-size: 24px;
+}
+
+.role-guide-title {
+  font-weight: 700;
+  color: #fff;
+  font-size: 0.95rem;
+}
+
+.role-guide-summary {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}

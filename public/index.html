@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Salem: Juicio de Brujas - Town of Salem Web Edition</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+
+  <!-- ==================== ENCABEZADO ==================== -->
+  <header class="app-header">
+    <div class="brand" onclick="SalemUI.switchView('view-lobby')">
+      <div class="brand-icon">🕯️</div>
+      <div class="brand-text">
+        <h1>Salem</h1>
+        <span>JUICIO DE BRUJAS</span>
+      </div>
+    </div>
+
+    <div class="header-center">
+      <div id="header-room-badge" class="room-badge" style="display: none;">
+        <span>SALA:</span>
+        <span id="header-room-code" class="room-code-tag">-----</span>
+        <button class="btn-icon-tiny" onclick="SalemApp.copyInviteLink()" title="Copiar enlace de invitación">📋</button>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <button class="btn btn-secondary btn-sm" onclick="SalemUI.openModal('modal-roles')" title="Guía de Roles">
+        📖 <span class="hide-mobile">Roles</span>
+      </button>
+      <button class="btn btn-secondary btn-sm" onclick="SalemUI.openModal('modal-will')" title="Editar Testamento">
+        📜 <span class="hide-mobile">Testamento</span>
+      </button>
+      <button class="btn btn-secondary btn-sm" onclick="SalemUI.openModal('modal-graveyard')" title="Cementerio">
+        🪦 <span class="hide-mobile">Cementerio</span>
+      </button>
+      <button id="btn-sound-toggle" class="btn btn-secondary btn-sm" onclick="SalemApp.toggleSound()" title="Sonido">
+        🔊
+      </button>
+    </div>
+  </header>
+
+  <!-- ==================== CONTENEDOR PRINCIPAL ==================== -->
+  <main class="main-container">
+
+    <!-- VISTA 1: INICIO Y SALA DE ESPERA (LOBBY) -->
+    <section id="view-lobby" class="view-section active">
+      
+      <!-- HERO Y TARJETAS DE ENTRADA -->
+      <div id="lobby-home-cards" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+        <div class="lobby-hero">
+          <h2>TOWN OF SALEM: JUICIO DE BRUJAS</h2>
+          <p>Un juego multijugador de deducción social, engaño y misterio. Juega gratis con tus amigos desde el navegador de sus casas o móviles.</p>
+        </div>
+
+        <div class="cards-container">
+          <!-- TARJETA 1: CREAR SALA -->
+          <div class="lobby-card">
+            <h3>🏰 Crear Nueva Sala</h3>
+            <p class="subtitle">Crea una sala privada y comparte el enlace o código con tus amigos.</p>
+
+            <div class="form-group">
+              <label>Tu Nombre de Habitante</label>
+              <input type="text" id="input-host-name" class="form-input" placeholder="Ej: John Proctor" maxlength="20" value="John Proctor">
+            </div>
+
+            <div class="form-group">
+              <label>Elige tu Avatar</label>
+              <div class="avatar-selector">
+                <div class="avatar-option selected" data-avatar="🧙‍♂️">🧙‍♂️</div>
+                <div class="avatar-option" data-avatar="🕵️‍♂️">🕵️‍♂️</div>
+                <div class="avatar-option" data-avatar="⚖️">⚖️</div>
+                <div class="avatar-option" data-avatar="🗡️">🗡️</div>
+                <div class="avatar-option" data-avatar="🎩">🎩</div>
+                <div class="avatar-option" data-avatar="🧕">🧕</div>
+                <div class="avatar-option" data-avatar="👑">👑</div>
+                <div class="avatar-option" data-avatar="🏹">🏹</div>
+                <div class="avatar-option" data-avatar="📜">📜</div>
+                <div class="avatar-option" data-avatar="🤡">🤡</div>
+              </div>
+            </div>
+
+            <button class="btn btn-primary btn-lg" onclick="SalemApp.createRoom()" style="margin-top: auto;">
+              ✨ Crear Sala de Juego
+            </button>
+          </div>
+
+          <!-- TARJETA 2: UNIRSE A SALA -->
+          <div class="lobby-card">
+            <h3>🚪 Unirse a una Sala</h3>
+            <p class="subtitle">Ingresa el código que te envió tu amigo para entrar a su partida.</p>
+
+            <div class="form-group">
+              <label>Código de Sala (5 letras)</label>
+              <input type="text" id="input-join-code" class="form-input" placeholder="Ej: SALEM" maxlength="6" style="text-transform: uppercase; font-family: monospace; font-size: 1.2rem; letter-spacing: 2px;">
+            </div>
+
+            <div class="form-group">
+              <label>Tu Nombre de Habitante</label>
+              <input type="text" id="input-join-name" class="form-input" placeholder="Ej: Abigail Williams" maxlength="20">
+            </div>
+
+            <button class="btn btn-town btn-lg" onclick="SalemApp.joinRoom()" style="margin-top: auto;">
+              🚀 Unirme a la Partida
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SALA DE ESPERA ACTIVA (IN-ROOM LOBBY) -->
+      <div id="in-room-container" class="in-room-container">
+        <div class="in-room-header">
+          <div class="in-room-header-left">
+            <h3>🏰 Sala: <span id="in-room-code-display" class="room-code-tag">ABCDE</span></h3>
+          </div>
+          <button class="btn btn-gold btn-sm" onclick="SalemApp.copyInviteLink()">
+            📋 Copiar Enlace para Amigos
+          </button>
+        </div>
+
+        <div class="share-banner">
+          <div class="share-banner-text">
+            <span>🌍</span>
+            <span>Envía el enlace a tus amigos para que se conecten desde sus casas o móviles. Se necesitan mínimo 4 jugadores (puedes rellenar con bots).</span>
+          </div>
+        </div>
+
+        <h4 style="font-size: 0.9rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 12px; letter-spacing: 1px;">
+          Habitantes en la Sala:
+        </h4>
+        <div id="players-lobby-grid" class="players-lobby-grid">
+          <!-- Los slots de jugadores se insertan dinámicamente -->
+        </div>
+
+        <div class="in-room-footer">
+          <div id="host-controls-panel" class="lobby-controls-left" style="display: none;">
+            <button class="btn btn-secondary" onclick="SalemApp.addBot()">
+              🤖 Añadir 1 Bot
+            </button>
+            <button class="btn btn-secondary" onclick="SalemApp.fillBots(6)">
+              👥 Rellenar a 6 (Bots)
+            </button>
+            <button class="btn btn-secondary" onclick="SalemApp.fillBots(8)">
+              👥 Rellenar a 8 (Bots)
+            </button>
+          </div>
+
+          <div id="waiting-host-msg" style="color: var(--text-muted); font-size: 0.95rem; display: none;">
+            ⏳ Esperando a que el anfitrión inicie la partida...
+          </div>
+
+          <button id="btn-start-game" class="btn btn-primary btn-lg" onclick="SalemApp.startGame()">
+            ⚔️ Iniciar Partida
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- VISTA 2: PARTIDA EN JUEGO (GAME VIEW) -->
+    <section id="view-game" class="view-section">
+
+      <!-- ÁREA CENTRAL DE JUEGO -->
+      <div class="game-main-area">
+
+        <!-- BARRA SUPERIOR DE FASE Y TEMPORIZADOR -->
+        <div class="phase-bar">
+          <div class="phase-pill">
+            <span id="phase-icon" class="phase-icon">☀️</span>
+            <div>
+              <div id="phase-title" class="phase-title">Día 1: Discusión</div>
+              <div id="phase-desc" class="phase-desc">Debatan abiertamente quién parece sospechoso.</div>
+            </div>
+          </div>
+
+          <div id="timer-box" class="timer-box">
+            <span>⏳</span>
+            <span id="timer-number" class="timer-number">30</span>
+            <span style="font-size: 0.8rem; color: var(--text-muted);">seg</span>
+          </div>
+        </div>
+
+        <!-- PLAZA CENTRAL DE SALEM -->
+        <div class="town-square">
+          
+          <!-- CONTENEDOR DEL PATÍBULO / JUICIO (Flotante durante el juicio) -->
+          <div id="trial-stand-container" class="trial-banner-box" style="display: none;">
+            <div class="trial-stand-icon">⚖️</div>
+            <div id="trial-stage-label" class="trial-stage-label">DEFENSA DEL ACUSADO</div>
+            <div id="trial-accused-name" class="trial-accused-name">Giles Corey</div>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">El acusado se encuentra en el patíbulo frente a los ciudadanos.</p>
+            
+            <div id="trial-voting-buttons" class="trial-voting-buttons" style="display: none;">
+              <button class="btn-trial-guilty" onclick="SalemApp.castTrialVote('GUILTY')">
+                🔴 Culpable
+              </button>
+              <button class="btn-trial-innocent" onclick="SalemApp.castTrialVote('INNOCENT')">
+                🟢 Inocente
+              </button>
+              <button class="btn-trial-abstain" onclick="SalemApp.castTrialVote('ABSTAIN')">
+                ⚪ Abstenerse
+              </button>
+            </div>
+          </div>
+
+          <!-- CUADRÍCULA DE HABITANTES DE SALEM -->
+          <div id="citizens-grid" class="citizens-grid">
+            <!-- Las cartas de cada jugador se generan aquí -->
+          </div>
+        </div>
+
+        <!-- BARRA DE ACCIÓN INFERIOR -->
+        <div class="action-deck">
+          <div class="action-deck-left">
+            <div class="my-role-compact" onclick="SalemUI.openModal('modal-roles')">
+              <span id="my-role-icon" class="my-role-icon">📜</span>
+              <div class="my-role-details">
+                <span id="my-role-name" class="my-role-name">Cargando rol...</span>
+                <span id="my-role-faction" class="my-role-faction">PUEBLO</span>
+              </div>
+            </div>
+
+            <div id="action-prompt-box" class="action-prompt-box">
+              <span>Selecciona un habitante para realizar tu acción.</span>
+            </div>
+          </div>
+
+          <div id="action-buttons-group" class="action-buttons-group">
+            <!-- Botones dinámicos según el rol (Alcalde, Veterano, Pirómano, Carcelero) -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- PANEL LATERAL DE CHAT CON PESTAÑAS -->
+      <aside class="chat-sidebar">
+        <div class="chat-tabs">
+          <button class="chat-tab active" data-channel="TOWN">
+            🏛️ Pueblo
+          </button>
+          <button class="chat-tab" data-channel="COVEN">
+            🔮 Aquelarre
+          </button>
+          <button class="chat-tab" data-channel="JAIL">
+            🗝️ Celda
+          </button>
+          <button class="chat-tab" data-channel="DEAD">
+            👻 Muertos
+          </button>
+        </div>
+
+        <div id="chat-messages" class="chat-messages">
+          <!-- Mensajes de chat en tiempo real -->
+        </div>
+
+        <div class="chat-input-bar">
+          <input type="text" id="chat-input" class="chat-input" placeholder="Escribe tu mensaje..." maxlength="200" autocomplete="off">
+          <button class="btn btn-primary btn-sm" onclick="SalemApp.sendChat()">
+            Enviar
+          </button>
+        </div>
+      </aside>
+
+    </section>
+
+  </main>
+
+  <!-- ==================== MODALES ==================== -->
+
+  <!-- MODAL: EL TESTAMENTO (LAST WILL) -->
+  <div id="modal-will" class="modal-backdrop">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div class="modal-title">📜 El Testamento de Salem</div>
+        <button class="btn-close-modal" onclick="SalemUI.closeModal('modal-will')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="parchment-paper">
+          <div class="parchment-header">
+            <h3>Última Voluntad y Testamento</h3>
+            <p>Se leerá ante todo el pueblo cuando mueras. Escribe tus sospechas y deducciones.</p>
+          </div>
+          <textarea id="will-textarea" class="will-textarea" placeholder="Escribe aquí tu testamento...
+Noche 1: Giles Corey (Sospechoso)
+Noche 2: Protegí a John Proctor"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <span style="font-size: 0.8rem; color: var(--text-muted); margin-right: auto;">Se guarda automáticamente al escribir</span>
+        <button class="btn btn-primary" onclick="SalemApp.saveWill(); SalemUI.closeModal('modal-will');">
+          Cerrar y Guardar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: CEMENTERIO (GRAVEYARD) -->
+  <div id="modal-graveyard" class="modal-backdrop">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div class="modal-title">🪦 Cementerio de Salem</div>
+        <button class="btn-close-modal" onclick="SalemUI.closeModal('modal-graveyard')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div id="graveyard-list" class="graveyard-list">
+          <!-- Lápidas insertadas dinámicamente -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="SalemUI.closeModal('modal-graveyard')">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: VER TESTAMENTO DE UN DIFUNTO -->
+  <div id="modal-view-will" class="modal-backdrop">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div id="will-display-title" class="modal-title">📜 Testamento</div>
+        <button class="btn-close-modal" onclick="SalemUI.closeModal('modal-view-will')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="parchment-paper">
+          <pre id="will-display-text" style="white-space: pre-wrap; font-family: 'MedievalSharp', cursive; font-size: 1.15rem; color: #26190a; line-height: 1.6;"></pre>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="SalemUI.closeModal('modal-view-will')">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: GUÍA DE ROLES -->
+  <div id="modal-roles" class="modal-backdrop">
+    <div class="modal-dialog" style="max-width: 800px;">
+      <div class="modal-header">
+        <div class="modal-title">📖 Enciclopedia de Roles de Salem</div>
+        <button class="btn-close-modal" onclick="SalemUI.closeModal('modal-roles')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="role-tabs">
+          <button class="role-tab-btn active" data-faction="ALL">Todos los Roles</button>
+          <button class="role-tab-btn" data-faction="TOWN">🏛️ Pueblo</button>
+          <button class="role-tab-btn" data-faction="COVEN">🔮 Aquelarre</button>
+          <button class="role-tab-btn" data-faction="NEUTRAL">⚖️ Neutrales</button>
+        </div>
+        <div id="role-guide-grid" class="role-guide-grid">
+          <!-- Tarjetas de roles generadas desde roles-data.js -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="SalemUI.closeModal('modal-roles')">Entendido</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: AMANECER Y BAJAS (DAWN ANNOUNCEMENT) -->
+  <div id="modal-dawn-announcement" class="modal-backdrop">
+    <div class="modal-dialog" style="max-width: 620px;">
+      <div class="dawn-card" style="border: none; padding: 0;">
+        <div class="dawn-header">
+          <span class="dawn-header-icon">🌅</span>
+          <div class="dawn-header-text">
+            <h3>Amanecer en Salem</h3>
+            <p style="color: var(--text-muted); font-size: 0.88rem;">La campana dobla por las almas caídas en la noche.</p>
+          </div>
+        </div>
+        <div id="dawn-deaths-container" style="display: flex; flex-direction: column; gap: 14px; margin-top: 14px;">
+          <!-- Muertes nocturnas -->
+        </div>
+        <div style="margin-top: 20px; display: flex; justify-content: flex-end;">
+          <button class="btn btn-primary" onclick="SalemUI.closeModal('modal-dawn-announcement')">
+            Continuar al Día
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: VICTORIA / FIN DE PARTIDA (GAME OVER) -->
+  <div id="modal-game-over" class="modal-backdrop">
+    <div class="modal-dialog" style="max-width: 740px;">
+      <div class="victory-card" style="border: none; padding: 0;">
+        <div id="victory-title" class="victory-title">¡VICTORIA DEL PUEBLO!</div>
+        <div id="victory-desc" class="victory-desc">El Aquelarre y los asesinos han sido purgados de Salem.</div>
+
+        <table class="recap-table">
+          <thead>
+            <tr>
+              <th>Habitante</th>
+              <th>Rol y Facción</th>
+              <th>Estado</th>
+              <th>Resultado</th>
+            </tr>
+          </thead>
+          <tbody id="recap-tbody">
+            <!-- Filas del resumen final -->
+          </tbody>
+        </table>
+
+        <div style="display: flex; justify-content: center; gap: 16px; margin-top: 16px;">
+          <button class="btn btn-gold btn-lg" onclick="SalemApp.restartLobby()">
+            🔄 Volver a la Sala y Jugar Otra
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTENEDOR DE TOASTS FLOTANTES -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- SCRIPTS -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/roles-data.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

@@ -133,8 +133,9 @@ class SalemGame {
   // ==================== INICIO DE PARTIDA ====================
 
   startGame() {
+    // Si hay menos de 4 jugadores, rellenar automáticamente con bots para que siempre arranque sin fallar
     if (this.players.length < 4) {
-      return { success: false, message: 'Se necesitan al menos 4 jugadores para iniciar la partida.' };
+      this.fillWithBots(4);
     }
 
     this.phase = 'ROLE_REVEAL';
@@ -819,6 +820,28 @@ class SalemGame {
       }
     });
 
+    // Espía (Spy)
+    this.players.filter(p => p.role && p.role.id === 'spy' && p.isAlive && !p.isJailed).forEach(spy => {
+      const action = this.nightActions[spy.id];
+      if (action && action.targetId) {
+        const target = this.players.find(p => p.id === action.targetId && p.isAlive);
+        if (target) {
+          const visitors = [];
+          for (const aId in this.nightActions) {
+            if (this.nightActions[aId] && this.nightActions[aId].targetId === target.id && aId !== spy.id) {
+              const v = this.players.find(pl => pl.id === aId);
+              if (v) visitors.push(v.name);
+            }
+          }
+          if (visitors.length > 0) {
+            addMsg(spy.id, `🕶️ Tu micro espía detectó visitas a ${target.name}: ${visitors.join(', ')}.`);
+          } else {
+            addMsg(spy.id, `🕶️ Nadie visitó a ${target.name} anoche.`);
+          }
+        }
+      }
+    });
+
     // Aplicar defunciones sin duplicar
     const finalDead = [];
     deathsThisNight.forEach(d => {
@@ -961,17 +984,18 @@ class SalemGame {
     if (!trimmed) return;
 
     // Control de canales de chat:
-    // 1. Canal MUERTOS (DEAD): Jugadores muertos pueden hablar en cualquier fase
-    if (!sender.isAlive || channel === 'DEAD') {
+    // 1. Canal MUERTOS (DEAD): Jugadores muertos o Médium vivo de noche
+    const isMediumAtNight = sender.isAlive && sender.role && sender.role.id === 'medium' && this.phase === 'NIGHT';
+    if (!sender.isAlive || channel === 'DEAD' || isMediumAtNight) {
       const msg = {
         senderId: sender.id,
-        senderName: `👻 ${sender.name} (Muerto)`,
+        senderName: isMediumAtNight ? `🕯️ ${sender.name} (Médium)` : `👻 ${sender.name} (Muerto)`,
         text: trimmed,
         channel: 'DEAD',
         timestamp: Date.now()
       };
-      // Enviar solo a jugadores muertos
-      this.players.filter(p => !p.isAlive).forEach(p => {
+      // Enviar a muertos y médiums vivos
+      this.players.filter(p => !p.isAlive || (p.role && p.role.id === 'medium')).forEach(p => {
         this.io.to(p.id).emit('chat_message', msg);
       });
       return;

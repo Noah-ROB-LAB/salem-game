@@ -451,3 +451,232 @@
   color: var(--text-muted);
   line-height: 1.4;
 }
+
+/* ==================== ANIMACIONES Y NUEVAS FUNCIONALIDADES ==================== */
+
+/* 1. TARJETA DE ROL 3D (ROLE REVEAL TAROT CARD) */
+.role-reveal-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(3, 5, 8, 0.92);
+  backdrop-filter: blur(12px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  animation: fadeIn 0.4s ease-out;
+}
+
+.tarot-card-container {
+  perspective: 1200px;
+  width: 320px;
+  height: 480px;
+  margin-bottom: 24px;
+}
+
+.tarot-card {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 0 50px rgba(0, 0, 0, 0.9);
+  border-radius: 20px;
+}
+
+.tarot-card.flipped {
+  transform: rotateY(180deg);
+}
+
+.tarot-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  border: 4px solid var(--gold-accent);
+  box-sizing: border-box;
+}
+
+.tarot-front {
+  background: radial-gradient(circle, #221a2e 0%, #0c0a12 100%);
+  border-color: #d4ac0d;
+  box-shadow: inset 0 0 40px rgba(212, 172, 13, 0.3);
+  text-align: center;
+}
+
+.tarot-front-symbol {
+  font-size: 80px;
+  animation: pulse-glyph 2s infinite alternate;
+  filter: drop-shadow(0 0 15px rgba(241, 196, 15, 0.5));
+}
+
+@keyframes pulse-glyph {
+  from { transform: scale(0.95); opacity: 0.8; }
+  to { transform: scale(1.05); opacity: 1; }
+}
+
+.tarot-back {
+  background: radial-gradient(circle, #1a2233 0%, #0d111a 100%);
+  transform: rotateY(180deg);
+  text-align: center;
+  box-shadow: inset 0 0 50px rgba(46, 204, 113, 0.2);
+}
+
+.tarot-back.coven-aura {
+  background: radial-gradient(circle, #2e1233 0%, #150619 100%);
+  border-color: var(--coven-color);
+  box-shadow: inset 0 0 50px rgba(155, 89, 182, 0.3), 0 0 30px rgba(155, 89, 182, 0.4);
+}
+
+.tarot-back.neutral-aura {
+  background: radial-gradient(circle, #332212 0%, #1a0f05 100%);
+  border-color: var(--neutral-color);
+  box-shadow: inset 0 0 50px rgba(230, 126, 34, 0.3);
+}
+
+.tarot-role-icon {
+  font-size: 72px;
+  margin-bottom: 12px;
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.6));
+}
+
+.tarot-role-title {
+  font-family: var(--font-serif);
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: 2px;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+
+.tarot-faction-badge {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  padding: 4px 14px;
+  border-radius: var(--radius-full);
+  margin-bottom: 16px;
+}
+
+.tarot-goal-box {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  font-size: 0.85rem;
+  color: #f1c40f;
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+.tarot-ability-desc {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+/* 2. BANNER DE TRANSICIÓN DE FASE (DÍA / NOCHE) */
+.phase-transition-banner {
+  position: fixed;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-150px);
+  background: rgba(18, 22, 31, 0.95);
+  border: 2px solid var(--gold-accent);
+  border-radius: var(--radius-full);
+  padding: 14px 36px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), 0 0 25px rgba(241, 196, 15, 0.3);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.phase-transition-banner.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+.phase-transition-icon {
+  font-size: 32px;
+}
+
+.phase-transition-text {
+  font-family: var(--font-serif);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+/* 3. BURBUJA DE CHAT EN VIVO SOBRE EL AVATAR DEL JUGADOR */
+.citizen-speech-bubble {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-8px);
+  background: rgba(245, 238, 215, 0.95);
+  color: #2b2013;
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  white-space: nowrap;
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  pointer-events: none;
+  z-index: 50;
+  animation: pop-bubble 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.citizen-speech-bubble::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: rgba(245, 238, 215, 0.95);
+}
+
+@keyframes pop-bubble {
+  from { transform: translateX(-50%) translateY(4px) scale(0.7); opacity: 0; }
+  to { transform: translateX(-50%) translateY(-8px) scale(1); opacity: 1; }
+}
+
+/* 4. ANIMACIÓN DE HORCA Y SENTENCIA */
+.verdict-execution-drop {
+  animation: drop-gallows 0.8s ease-in forwards;
+}
+
+@keyframes drop-gallows {
+  0% { transform: translateY(0); opacity: 1; }
+  40% { transform: translateY(-10px); }
+  70% { transform: translateY(60px); opacity: 0.8; }
+  100% { transform: translateY(120px); opacity: 0; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+

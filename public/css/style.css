@@ -568,6 +568,14 @@ main.main-container {
   flex-direction: row;
 }
 
+#view-game.active {
+  display: flex !important;
+}
+
+#view-lobby.active {
+  display: flex !important;
+}
+
 .game-main-area {
   flex: 1;
   display: flex;

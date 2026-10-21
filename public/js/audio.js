@@ -191,6 +191,61 @@ class SalemAudio {
     });
   }
 
+  // Acorde de misterio / suspense (revelación de rol o juicio)
+  playSuspense() {
+    if (this.muted) return;
+    this.init();
+    if (!this.ctx) return;
+
+    const t = this.ctx.currentTime;
+    [130.81, 155.56, 196.00, 246.94].forEach(freq => {
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(freq, t);
+
+      gain.gain.setValueAtTime(0.01, t);
+      gain.gain.linearRampToValueAtTime(0.2, t + 0.6);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 2.4);
+
+      const filter = this.ctx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(350, t);
+      filter.frequency.linearRampToValueAtTime(800, t + 1.2);
+
+      osc.connect(filter);
+      filter.connect(gain);
+      gain.connect(this.ctx.destination);
+
+      osc.start(t);
+      osc.stop(t + 2.5);
+    });
+  }
+
+  // Caída de la horca (ejecución)
+  playGallowsDrop() {
+    if (this.muted) return;
+    this.init();
+    if (!this.ctx) return;
+
+    const t = this.ctx.currentTime;
+    // Golpe sordo de madera
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    osc.type = 'square';
+    osc.frequency.setValueAtTime(100, t);
+    osc.frequency.exponentialRampToValueAtTime(25, t + 0.3);
+
+    gain.gain.setValueAtTime(0.9, t);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.4);
+
+    osc.connect(gain);
+    gain.connect(this.ctx.destination);
+
+    osc.start(t);
+    osc.stop(t + 0.4);
+  }
+
   // Clic suave de interfaz
   playClick() {
     if (this.muted) return;

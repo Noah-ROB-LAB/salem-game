@@ -239,6 +239,46 @@ const ROLES = {
     ]
   },
 
+  medium: {
+    id: 'medium',
+    name: 'Médium',
+    faction: 'TOWN',
+    alignment: 'Apoyo',
+    icon: '🕯️',
+    color: '#2ecc71',
+    defense: 0,
+    attack: 0,
+    nightActionType: 'NONE',
+    description: 'Un canalizador espiritual capaz de comunicarse con las almas del más allá.',
+    abilities: [
+      'Puedes hablar libremente con los espíritus de los jugadores muertos durante la noche.'
+    ],
+    attributes: [
+      'Escuchas el chat de los muertos cada noche.',
+      'Si mueres, puedes realizar una sesión espiritista con un habitante vivo.'
+    ]
+  },
+
+  spy: {
+    id: 'spy',
+    name: 'Espía (Spy)',
+    faction: 'TOWN',
+    alignment: 'Investigación',
+    icon: '🕶️',
+    color: '#2ecc71',
+    defense: 0,
+    attack: 0,
+    nightActionType: 'TARGET_ONE_NO_SELF',
+    actionPrompt: 'Elige una casa para colocar un micrófono espía esta noche:',
+    description: 'Un agente encubierto experto en espionaje e interceptación de comunicaciones.',
+    abilities: [
+      'Coloca un micro espía en la casa de un habitante cada noche.'
+    ],
+    attributes: [
+      'Sabrás quién visitó a tu objetivo y a quién visitó el Aquelarre durante la noche.'
+    ]
+  },
+
   // ==================== AQUELARRE (COVEN) ====================
   coven_leader: {
     id: 'coven_leader',

@@ -120,6 +120,30 @@ const CLIENT_ROLES_INFO = {
     summary: 'Descubre si tu objetivo tiene manos ensangrentadas (atacó esta noche).',
     tips: 'Inspecciona a personas que sospeches que son asesinos o líderes.'
   },
+  medium: {
+    name: 'Médium',
+    faction: 'Pueblo',
+    factionKey: 'TOWN',
+    icon: '🕯️',
+    color: '#2ecc71',
+    defense: 'Ninguna',
+    attack: 'Ninguno',
+    goal: 'Elimina a todos los criminales y al Aquelarre.',
+    summary: 'Comunícate con los espíritus de los jugadores muertos durante la noche.',
+    tips: 'Pregunta a los muertos qué investigaron antes de morir para guiar al pueblo.'
+  },
+  spy: {
+    name: 'Espía (Spy)',
+    faction: 'Pueblo',
+    factionKey: 'TOWN',
+    icon: '🕶️',
+    color: '#2ecc71',
+    defense: 'Ninguna',
+    attack: 'Ninguno',
+    goal: 'Elimina a todos los criminales y al Aquelarre.',
+    summary: 'Coloca micros espía para saber quién visitó a tu objetivo y a quién visitó el Aquelarre.',
+    tips: 'Compara tus notas con el Investigador o Rastreador para confirmar asesinos.'
+  },
   coven_leader: {
     name: 'Líder del Aquelarre',
     faction: 'Aquelarre',

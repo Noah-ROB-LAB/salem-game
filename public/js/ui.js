@@ -1,10 +1,12 @@
-// Controlador visual y de interfaz de usuario para Salem
+// Controlador visual y de interfaz de usuario para Salem (Town of Salem 2 Web Edition)
 const SalemUI = {
   currentView: 'view-lobby',
   selectedCitizenId: null,
   selectedSecondCitizenId: null,
   currentChatTab: 'TOWN',
   unreadChatCounts: { TOWN: 0, COVEN: 0, JAIL: 0, DEAD: 0, SYSTEM: 0 },
+  lastPhase: null,
+  tarotShownForGame: false,
 
   init() {
     this.setupModalDismissers();
@@ -60,6 +62,101 @@ const SalemUI = {
     if (target) {
       target.classList.add('active');
       this.currentView = viewId;
+    }
+  },
+
+  // ==================== BANNER DE TRANSICIÓN DE FASE ====================
+  showPhaseBanner(title, icon = '☀️') {
+    let banner = document.getElementById('phase-transition-banner');
+    if (!banner) {
+      banner = document.createElement('div');
+      banner.id = 'phase-transition-banner';
+      banner.className = 'phase-transition-banner';
+      document.body.appendChild(banner);
+    }
+
+    banner.innerHTML = `
+      <span class="phase-transition-icon">${icon}</span>
+      <span class="phase-transition-text">${title}</span>
+    `;
+
+    banner.classList.add('show');
+    setTimeout(() => {
+      banner.classList.remove('show');
+    }, 2800);
+  },
+
+  // ==================== TARJETA DE ROL 3D (TAROT CARD ANIMATION) ====================
+  showTarotRoleCard(role) {
+    if (!role) return;
+
+    if (window.salemAudio) {
+      window.salemAudio.playSuspense();
+    }
+
+    let overlay = document.getElementById('role-reveal-overlay');
+    if (!overlay) {
+      overlay = document.createElement('div');
+      overlay.id = 'role-reveal-overlay';
+      overlay.className = 'role-reveal-modal';
+      document.body.appendChild(overlay);
+    }
+
+    const factionAura = role.faction === 'COVEN' ? 'coven-aura' : role.faction === 'NEUTRAL' ? 'neutral-aura' : '';
+
+    overlay.innerHTML = `
+      <div class="tarot-card-container">
+        <div id="tarot-card-inner" class="tarot-card">
+          <!-- Cara frontal (Misterio de Salem) -->
+          <div class="tarot-face tarot-front">
+            <div class="tarot-front-symbol">👁️</div>
+            <h3 style="font-family: var(--font-serif); color: var(--gold-accent); letter-spacing: 3px; margin-top: 16px;">SALEM</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 8px;">Descubriendo tu destino...</p>
+          </div>
+          <!-- Cara trasera (Tu Rol Revelado) -->
+          <div class="tarot-face tarot-back ${factionAura}">
+            <div class="tarot-role-icon">${role.icon || '📜'}</div>
+            <div class="tarot-role-title">${role.name}</div>
+            <div class="tarot-faction-badge" style="background: ${role.color}33; color: ${role.color}; border: 1px solid ${role.color}">
+              ${role.faction} • ${role.alignment || 'Poder'}
+            </div>
+            <div class="tarot-goal-box">
+              <strong>Objetivo:</strong> ${role.description || 'Cumple con tu destino en Salem.'}
+            </div>
+            <div class="tarot-ability-desc">
+              ${(role.abilities && role.abilities[0]) || 'Usa tus habilidades durante la noche o el día.'}
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="btn btn-gold btn-lg" onclick="SalemUI.dismissTarot()">
+        ⚔️ Entendido, ¡a luchar!
+      </button>
+    `;
+
+    overlay.style.display = 'flex';
+
+    // Voltear la carta con animación 3D tras 600ms
+    setTimeout(() => {
+      const card = document.getElementById('tarot-card-inner');
+      if (card) card.classList.add('flipped');
+    }, 600);
+
+    // Auto-cerrar al terminar el tiempo de revelación
+    setTimeout(() => {
+      this.dismissTarot();
+    }, 7000);
+  },
+
+  dismissTarot() {
+    const overlay = document.getElementById('role-reveal-overlay');
+    if (overlay) {
+      overlay.style.opacity = '0';
+      overlay.style.transition = 'opacity 0.5s';
+      setTimeout(() => {
+        overlay.style.display = 'none';
+        overlay.style.opacity = '1';
+      }, 500);
     }
   },
 
@@ -127,9 +224,9 @@ const SalemUI = {
       if (hostControls) hostControls.style.display = 'flex';
       if (waitingHostMsg) waitingHostMsg.style.display = 'none';
       if (startBtn) {
-        startBtn.disabled = lobbyData.players.length < 4;
+        startBtn.disabled = false;
         startBtn.innerHTML = lobbyData.players.length < 4
-          ? `⚔️ Iniciar Partida (${lobbyData.players.length}/4 mín.)`
+          ? `⚔️ Iniciar Partida (Rellenará con bots)`
           : `⚔️ Iniciar Partida (${lobbyData.players.length} Jugadores)`;
       }
     } else {
@@ -141,6 +238,12 @@ const SalemUI = {
   // ==================== RENDERIZADO DEL ESTADO DE JUEGO ====================
   renderGameState(state, myId) {
     this.switchView('view-game');
+
+    // Detectar cambio de fase para animaciones
+    if (this.lastPhase !== state.phase) {
+      this.handlePhaseChange(state);
+      this.lastPhase = state.phase;
+    }
 
     // 1. Fase y temporizador en encabezado
     this.updatePhaseHeader(state);
@@ -156,6 +259,31 @@ const SalemUI = {
 
     // 5. Patíbulo / Juicio
     this.renderTrialStand(state, myId);
+  },
+
+  handlePhaseChange(state) {
+    if (state.phase === 'ROLE_REVEAL' && !this.tarotShownForGame) {
+      this.tarotShownForGame = true;
+      if (state.myPlayer && state.myPlayer.role) {
+        this.showTarotRoleCard(state.myPlayer.role);
+      }
+    } else if (state.phase === 'DAY_DISCUSSION') {
+      this.showPhaseBanner(`¡Amanecer del Día ${state.dayNumber}!`, '☀️');
+      if (window.salemAudio) window.salemAudio.playBell();
+      document.body.classList.remove('night-time');
+      document.body.classList.add('day-time');
+    } else if (state.phase === 'DAY_NOMINATION') {
+      this.showPhaseBanner('¡Comienzan las acusaciones al Patíbulo!', '⚖️');
+      if (window.salemAudio) window.salemAudio.playGavel();
+    } else if (state.phase === 'TRIAL_DEFENSE') {
+      this.showPhaseBanner('¡Un sospechoso en el patíbulo!', '🔔');
+      if (window.salemAudio) window.salemAudio.playSuspense();
+    } else if (state.phase === 'NIGHT') {
+      this.showPhaseBanner(`Cae la Noche ${state.nightNumber}`, '🌙');
+      if (window.salemAudio) window.salemAudio.playNight();
+      document.body.classList.remove('day-time');
+      document.body.classList.add('night-time');
+    }
   },
 
   updatePhaseHeader(state) {
@@ -219,9 +347,9 @@ const SalemUI = {
     if (timerNumber) {
       timerNumber.textContent = state.timeLeft || 0;
       if (state.timeLeft <= 10) {
-        timerBox.classList.add('timer-urgent');
+        timerBox?.classList.add('timer-urgent');
       } else {
-        timerBox.classList.remove('timer-urgent');
+        timerBox?.classList.remove('timer-urgent');
       }
     }
   },
@@ -239,6 +367,8 @@ const SalemUI = {
       const isSelected = this.selectedCitizenId === p.id || this.selectedSecondCitizenId === p.id;
 
       const card = document.createElement('div');
+      card.id = `citizen-card-${p.id}`;
+      card.dataset.citizenName = p.name;
       card.className = `citizen-card ${!p.isAlive ? 'dead' : ''} ${isMe ? 'self' : ''} ${isAccused ? 'accused' : ''} ${isSelected ? 'selected-target' : ''}`;
 
       // Votos de nominación recibidos
@@ -277,7 +407,7 @@ const SalemUI = {
         ${roleBadge}
       `;
 
-      // Clic para interactuar (Acusar de día o seleccionar objetivo de noche)
+      // Clic para interactuar
       card.addEventListener('click', () => {
         this.handleCitizenClick(p, state, myPlayer);
       });
@@ -334,9 +464,11 @@ const SalemUI = {
         if (this.selectedCitizenId === target.id) {
           this.selectedCitizenId = null;
           SalemApp.submitNightAction({});
+          this.showToast('Objetivo cancelado.');
         } else {
           this.selectedCitizenId = target.id;
           SalemApp.submitNightAction({ targetId: target.id });
+          this.showToast(`Seleccionaste a ${target.name} como objetivo.`);
         }
       }
 
@@ -373,7 +505,7 @@ const SalemUI = {
     }
 
     if (state.phase === 'DAY_DISCUSSION' || state.phase === 'DAY_NOMINATION') {
-      promptBox.innerHTML = '<span>Haz clic en un habitante para señalarlo o debatir.</span>';
+      promptBox.innerHTML = '<span>Haz clic en un habitante para acusarlo o debatir.</span>';
 
       // Botón del Alcalde para revelarse
       if (myPlayer.role && myPlayer.role.id === 'mayor' && !myPlayer.isRevealedMayor) {
@@ -425,11 +557,12 @@ const SalemUI = {
     }
   },
 
+  // ==================== PATÍBULO Y JUICIO ====================
   renderTrialStand(state, myId) {
     const stand = document.getElementById('trial-stand-container');
     if (!stand) return;
 
-    if (state.phase !== 'TRIAL_DEFENSE' && state.phase !== 'TRIAL_VOTING') {
+    if (state.phase !== 'TRIAL_DEFENSE' && state.phase !== 'TRIAL_VOTING' && state.phase !== 'TRIAL_VERDICT') {
       stand.style.display = 'none';
       return;
     }
@@ -454,13 +587,51 @@ const SalemUI = {
         const myPlayer = state.myPlayer;
 
         if (isMeAccused || !myPlayer.isAlive) {
-          votingBtns.innerHTML = '<span style="color: var(--text-muted)">No puedes votar en este veredicto.</span>';
+          votingBtns.innerHTML = '<span style="color: var(--text-muted); font-size: 0.95rem;">No puedes votar en tu propio juicio.</span>';
           votingBtns.style.display = 'block';
         } else {
+          votingBtns.innerHTML = `
+            <button class="btn-trial-guilty" onclick="SalemApp.castTrialVote('GUILTY')">
+              🔴 Culpable
+            </button>
+            <button class="btn-trial-innocent" onclick="SalemApp.castTrialVote('INNOCENT')">
+              🟢 Inocente
+            </button>
+            <button class="btn-trial-abstain" onclick="SalemApp.castTrialVote('ABSTAIN')">
+              ⚪ Abstenerse
+            </button>
+          `;
           votingBtns.style.display = 'flex';
         }
       }
+    } else if (state.phase === 'TRIAL_VERDICT') {
+      if (stageEl) stageEl.textContent = '⚖️ ¡VEREDICTO EMITIDO!';
+      if (votingBtns) votingBtns.style.display = 'none';
     }
+  },
+
+  // ==================== BURBUJAS DE CHAT EN VIVO ====================
+  showCitizenSpeechBubble(senderName, text) {
+    if (!text || text.length === 0) return;
+    const cards = document.querySelectorAll('.citizen-card');
+    cards.forEach(card => {
+      if (card.dataset.citizenName === senderName) {
+        // Eliminar burbuja previa si existe
+        const oldBubble = card.querySelector('.citizen-speech-bubble');
+        if (oldBubble) oldBubble.remove();
+
+        const bubble = document.createElement('div');
+        bubble.className = 'citizen-speech-bubble';
+        bubble.textContent = text;
+        card.appendChild(bubble);
+
+        setTimeout(() => {
+          bubble.style.opacity = '0';
+          bubble.style.transition = 'opacity 0.3s';
+          setTimeout(() => bubble.remove(), 300);
+        }, 4000);
+      }
+    });
   },
 
   // ==================== CHAT ====================
@@ -475,6 +646,9 @@ const SalemUI = {
       msgEl.innerHTML = `<span>${msg.text}</span>`;
     } else {
       msgEl.innerHTML = `<span class="chat-sender">${msg.senderName}:</span><span>${msg.text}</span>`;
+      // Mostrar bocadillo animado sobre el personaje si está en la plaza
+      const cleanSender = msg.senderName.replace(/^[^\w\s]+/, '').trim();
+      this.showCitizenSpeechBubble(cleanSender, msg.text);
     }
 
     messagesContainer.appendChild(msgEl);
@@ -522,7 +696,7 @@ const SalemUI = {
     if (window.salemAudio) window.salemAudio.playBell();
 
     if (!dawnData.deaths || dawnData.deaths.length === 0) {
-      this.showToast('🌅 Amanece en Salem. ¡Nadie murió anoche!');
+      this.showToast('🌅 Amanece en Salem. ¡Nadie murió anoche!', 'success');
       return;
     }
 

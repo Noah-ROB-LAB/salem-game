@@ -220,6 +220,15 @@ const SalemApp = {
     SalemUI.showToast(`Rellenando la sala con bots hasta ${count} jugadores...`);
   },
 
+  quickPlayWithBots() {
+    if (window.salemAudio) window.salemAudio.init();
+    SalemUI.showToast('🤖 Añadiendo bots y comenzando la partida...', 'info');
+    this.socket.emit('fill_bots', { count: 6 });
+    setTimeout(() => {
+      this.startGame();
+    }, 600);
+  },
+
   removeBot(botId) {
     this.socket.emit('remove_bot', { botId });
   },
@@ -285,6 +294,8 @@ const SalemApp = {
   },
 
   restartLobby() {
+    SalemUI.tarotShownForGame = false;
+    SalemUI.lastPhase = null;
     this.socket.emit('restart_lobby');
     SalemUI.closeModal('modal-game-over');
     SalemUI.switchView('view-lobby');

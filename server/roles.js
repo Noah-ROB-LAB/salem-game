@@ -34,8 +34,9 @@ const ROLES = {
     defense: 0,
     attack: 0,
     nightActionType: 'TARGET_ONE',
-    actionPrompt: 'Elige a un jugador para interrogar esta noche:',
-    description: 'El guardián de la ley que investiga a los habitantes en busca de maldad.',
+    actionVerb: 'Interrogar',
+    actionPrompt: 'Toca a un jugador para investigar si es sospechoso:',
+    description: 'Investiga a un jugador de noche para saber si es del Pueblo o del Aquelarre.',
     abilities: [
       'Interroga a un jugador cada noche para averiguar si es sospechoso.'
     ],
@@ -56,8 +57,9 @@ const ROLES = {
     attack: 0,
     nightActionType: 'SELF_OR_OTHER',
     maxSelfHeals: 1,
-    actionPrompt: 'Elige a un habitante para curar y proteger esta noche:',
-    description: 'Un sabio cirujano que sana a los heridos en la oscuridad.',
+    actionVerb: 'Curar',
+    actionPrompt: 'Toca a un jugador para protegerlo de morir esta noche:',
+    description: 'Cura a un habitante de noche para salvarlo de cualquier ataque mortal.',
     abilities: [
       'Cura a un habitante cada noche otorgándole Defensa Poderosa.',
       'Solo puedes autocurarte 1 vez por partida.'

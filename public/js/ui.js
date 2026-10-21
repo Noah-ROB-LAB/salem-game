@@ -65,6 +65,24 @@ const SalemUI = {
     }
   },
 
+  toggleMobileChat() {
+    const sidebar = document.getElementById('chat-sidebar');
+    if (sidebar) {
+      sidebar.classList.toggle('open-mobile');
+      const unreadBadge = document.getElementById('mobile-unread-count');
+      if (unreadBadge) unreadBadge.style.display = 'none';
+      if (window.salemAudio) window.salemAudio.playClick();
+    }
+  },
+
+  closeMobileChat() {
+    const sidebar = document.getElementById('chat-sidebar');
+    if (sidebar) {
+      sidebar.classList.remove('open-mobile');
+      if (window.salemAudio) window.salemAudio.playClick();
+    }
+  },
+
   // ==================== BANNER DE TRANSICIÓN DE FASE ====================
   showPhaseBanner(title, icon = '☀️') {
     let banner = document.getElementById('phase-transition-banner');
@@ -214,14 +232,16 @@ const SalemUI = {
       });
     }
 
-    // Controles de anfitrión
+    // Controles de anfitrión y configuración de tiempos
     const myPlayer = lobbyData.players.find(p => p.id === myId);
     const hostControls = document.getElementById('host-controls-panel');
+    const settingsContainer = document.getElementById('host-settings-container');
     const startBtn = document.getElementById('btn-start-game');
     const waitingHostMsg = document.getElementById('waiting-host-msg');
 
     if (myPlayer && myPlayer.isHost) {
       if (hostControls) hostControls.style.display = 'flex';
+      if (settingsContainer) settingsContainer.style.display = 'block';
       if (waitingHostMsg) waitingHostMsg.style.display = 'none';
       if (startBtn) {
         startBtn.disabled = false;
@@ -231,7 +251,24 @@ const SalemUI = {
       }
     } else {
       if (hostControls) hostControls.style.display = 'none';
+      if (settingsContainer) settingsContainer.style.display = 'none';
       if (waitingHostMsg) waitingHostMsg.style.display = 'block';
+    }
+
+    // Sincronizar tiempos actuales para todos los jugadores
+    if (lobbyData.timings) {
+      const daySlider = document.getElementById('slider-time-day');
+      const nightSlider = document.getElementById('slider-time-night');
+      const dayDisplay = document.getElementById('display-time-day');
+      const nightDisplay = document.getElementById('display-time-night');
+      if (daySlider && dayDisplay) {
+        daySlider.value = lobbyData.timings.dayDiscussion || 35;
+        dayDisplay.textContent = `${daySlider.value}s`;
+      }
+      if (nightSlider && nightDisplay) {
+        nightSlider.value = lobbyData.timings.night || 25;
+        nightDisplay.textContent = `${nightSlider.value}s`;
+      }
     }
   },
 

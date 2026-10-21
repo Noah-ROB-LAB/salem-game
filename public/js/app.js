@@ -301,6 +301,61 @@ const SalemApp = {
     SalemUI.switchView('view-lobby');
   },
 
+  applyPreset(type) {
+    document.querySelectorAll('.preset-buttons .btn').forEach(b => b.classList.remove('active'));
+    let timings = { dayDiscussion: 35, night: 25 };
+
+    if (type === 'fast') {
+      timings = { dayDiscussion: 20, night: 15 };
+      document.getElementById('btn-preset-fast')?.classList.add('active');
+    } else if (type === 'slow') {
+      timings = { dayDiscussion: 50, night: 35 };
+      document.getElementById('btn-preset-slow')?.classList.add('active');
+    } else {
+      document.getElementById('btn-preset-normal')?.classList.add('active');
+    }
+
+    const daySlider = document.getElementById('slider-time-day');
+    const nightSlider = document.getElementById('slider-time-night');
+    const dayDisplay = document.getElementById('display-time-day');
+    const nightDisplay = document.getElementById('display-time-night');
+
+    if (daySlider && dayDisplay) {
+      daySlider.value = timings.dayDiscussion;
+      dayDisplay.textContent = `${timings.dayDiscussion}s`;
+    }
+    if (nightSlider && nightDisplay) {
+      nightSlider.value = timings.night;
+      nightDisplay.textContent = `${timings.night}s`;
+    }
+
+    this.socket.emit('update_settings', { timings });
+    SalemUI.showToast(`Tiempos actualizados: Día ${timings.dayDiscussion}s / Noche ${timings.night}s`);
+  },
+
+  onSliderChange() {
+    const daySlider = document.getElementById('slider-time-day');
+    const nightSlider = document.getElementById('slider-time-night');
+    const dayDisplay = document.getElementById('display-time-day');
+    const nightDisplay = document.getElementById('display-time-night');
+
+    const dayVal = daySlider ? parseInt(daySlider.value) : 35;
+    const nightVal = nightSlider ? parseInt(nightSlider.value) : 25;
+
+    if (dayDisplay) dayDisplay.textContent = `${dayVal}s`;
+    if (nightDisplay) nightDisplay.textContent = `${nightVal}s`;
+
+    clearTimeout(this.sliderDebounceTimer);
+    this.sliderDebounceTimer = setTimeout(() => {
+      this.socket.emit('update_settings', {
+        timings: {
+          dayDiscussion: dayVal,
+          night: nightVal
+        }
+      });
+    }, 300);
+  },
+
   toggleSound() {
     const isMuted = window.salemAudio.toggleMute();
     const btn = document.getElementById('btn-sound-toggle');

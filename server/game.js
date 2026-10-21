@@ -1102,9 +1102,18 @@ class SalemGame {
     }
   }
 
+  updateTimings(newTimings) {
+    if (!newTimings) return;
+    if (newTimings.dayDiscussion) this.timings.dayDiscussion = Math.max(10, Math.min(120, parseInt(newTimings.dayDiscussion)));
+    if (newTimings.dayNomination) this.timings.dayNomination = Math.max(10, Math.min(60, parseInt(newTimings.dayNomination)));
+    if (newTimings.night) this.timings.night = Math.max(10, Math.min(90, parseInt(newTimings.night)));
+    this.broadcastLobbyState();
+  }
+
   broadcastLobbyState() {
     this.io.to(this.roomCode).emit('lobby_state', {
       roomCode: this.roomCode,
+      timings: this.timings,
       players: this.players.map(p => ({
         id: p.id,
         name: p.name,

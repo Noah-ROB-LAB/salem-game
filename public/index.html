@@ -135,6 +135,24 @@
           <!-- Los slots de jugadores se insertan dinámicamente -->
         </div>
 
+        <!-- CONFIGURACIÓN DE TIEMPOS DEL ANFITRIÓN -->
+        <div id="host-settings-container" class="lobby-settings-card" style="display: none;">
+          <h4>⚙️ Tiempos de Partida (Modo Anfitrión)</h4>
+          <div class="preset-buttons">
+            <button type="button" id="btn-preset-fast" class="btn btn-secondary" onclick="SalemApp.applyPreset('fast')">⚡ Rápido (20s/15s)</button>
+            <button type="button" id="btn-preset-normal" class="btn btn-secondary active" onclick="SalemApp.applyPreset('normal')">⚖️ Normal (35s/25s)</button>
+            <button type="button" id="btn-preset-slow" class="btn btn-secondary" onclick="SalemApp.applyPreset('slow')">🧠 Estratégico (50s/35s)</button>
+          </div>
+          <div class="setting-slider-row">
+            <label>☀️ Discusión de Día: <strong id="display-time-day">35s</strong></label>
+            <input type="range" id="slider-time-day" min="15" max="90" step="5" value="35" oninput="SalemApp.onSliderChange()">
+          </div>
+          <div class="setting-slider-row">
+            <label>🌙 Noche: <strong id="display-time-night">25s</strong></label>
+            <input type="range" id="slider-time-night" min="15" max="60" step="5" value="25" oninput="SalemApp.onSliderChange()">
+          </div>
+        </div>
+
         <div class="in-room-footer">
           <div id="host-controls-panel" class="lobby-controls-left" style="display: none;">
             <button class="btn btn-secondary" onclick="SalemApp.addBot()">
@@ -235,8 +253,17 @@
 
       </div>
 
-      <!-- PANEL LATERAL DE CHAT CON PESTAÑAS -->
-      <aside class="chat-sidebar">
+      <!-- BOTÓN FLOTANTE PARA ABRIR CHAT EN MÓVIL -->
+      <button id="btn-mobile-chat-toggle" class="btn-mobile-chat" onclick="SalemUI.toggleMobileChat()">
+        💬 Chat <span id="mobile-unread-count" style="display:none; background: var(--blood-red); padding: 1px 6px; border-radius: 99px; font-size: 0.75rem;">0</span>
+      </button>
+
+      <!-- PANEL LATERAL DE CHAT CON PESTAÑAS (Drawer en móvil) -->
+      <aside id="chat-sidebar" class="chat-sidebar">
+        <div class="chat-mobile-header">
+          <span style="font-family: var(--font-serif); font-weight: 700; color: #fff;">💬 Chat de Salem</span>
+          <button class="btn-close-chat-mobile" onclick="SalemUI.closeMobileChat()">✕ Cerrar</button>
+        </div>
         <div class="chat-tabs">
           <button class="chat-tab active" data-channel="TOWN">
             🏛️ Pueblo

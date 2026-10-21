@@ -848,12 +848,25 @@ main.main-container {
 @media (max-width: 900px) {
   #view-game {
     flex-direction: column;
+    position: relative;
+    height: calc(100vh - 56px);
   }
   .chat-sidebar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
     width: 100%;
-    height: 320px;
+    height: 75vh;
+    border-radius: 20px 20px 0 0;
+    border-top: 2px solid var(--gold-accent);
     border-left: none;
-    border-top: 1px solid var(--border-color);
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.9);
+    z-index: 1500;
+    transform: translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .chat-sidebar.open-mobile {
+    transform: translateY(0);
   }
 }
 
@@ -993,3 +1006,189 @@ main.main-container {
   from { opacity: 0; transform: translateY(16px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* ==================== BOTÓN FLOTANTE DE CHAT MÓVIL ==================== */
+.btn-mobile-chat {
+  display: none;
+  position: fixed;
+  bottom: 85px;
+  right: 18px;
+  background: linear-gradient(135deg, #8e44ad, #6c3483);
+  color: #fff;
+  border: 2px solid var(--gold-accent);
+  border-radius: var(--radius-full);
+  padding: 10px 18px;
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  font-weight: 700;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
+  z-index: 1200;
+  cursor: pointer;
+  align-items: center;
+  gap: 8px;
+  transition: transform 0.2s;
+}
+
+.btn-mobile-chat:active {
+  transform: scale(0.95);
+}
+
+.chat-mobile-header {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: var(--bg-tertiary);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.btn-close-chat-mobile {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+
+@media (max-width: 900px) {
+  .btn-mobile-chat {
+    display: inline-flex;
+  }
+  .chat-mobile-header {
+    display: flex;
+  }
+}
+
+/* ==================== CONFIGURACIÓN DE SALA EN LOBBY ==================== */
+.lobby-settings-card {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+  margin-top: 16px;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.lobby-settings-card h4 {
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  color: var(--gold-accent);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.preset-buttons {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+.preset-buttons .btn {
+  font-size: 0.8rem;
+  padding: 6px 12px;
+}
+
+.preset-buttons .btn.active {
+  background: var(--gold-accent);
+  color: #1a1607;
+  font-weight: 700;
+}
+
+.setting-slider-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.setting-slider-row label {
+  font-size: 0.85rem;
+  color: var(--text-main);
+  min-width: 160px;
+}
+
+.setting-slider-row input[type="range"] {
+  flex: 1;
+  accent-color: var(--gold-accent);
+  cursor: pointer;
+}
+
+/* ==================== OPTIMIZACIÓN MÓVIL ESTILO WOLVESVILLE ==================== */
+@media (max-width: 600px) {
+  .app-header {
+    padding: 0 12px;
+    height: 56px;
+  }
+  .brand-text span {
+    display: none;
+  }
+  .brand-text h1 {
+    font-size: 1.1rem;
+  }
+  .hide-mobile {
+    display: none;
+  }
+  .header-actions {
+    gap: 6px;
+  }
+  .header-actions .btn {
+    padding: 6px 9px;
+    font-size: 0.82rem;
+  }
+  .room-badge {
+    padding: 3px 8px;
+    font-size: 0.75rem;
+  }
+  .room-code-tag {
+    font-size: 0.9rem;
+  }
+  .town-square {
+    padding: 10px 6px;
+  }
+  .citizens-grid {
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 8px;
+  }
+  .citizen-card {
+    padding: 8px 4px;
+  }
+  .citizen-avatar {
+    font-size: 30px;
+    margin-bottom: 2px;
+  }
+  .citizen-name {
+    font-size: 0.74rem;
+  }
+  .citizen-role-badge {
+    font-size: 0.62rem;
+    padding: 1px 4px;
+  }
+  .action-deck {
+    padding: 8px 12px;
+    gap: 8px;
+  }
+  .my-role-compact {
+    padding: 5px 8px;
+  }
+  .my-role-icon {
+    font-size: 20px;
+  }
+  .my-role-name {
+    font-size: 0.82rem;
+  }
+  .my-role-faction {
+    font-size: 0.65rem;
+  }
+  .btn-trial-guilty, .btn-trial-innocent {
+    padding: 10px 18px;
+    font-size: 0.95rem;
+  }
+}
+

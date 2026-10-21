@@ -142,6 +142,18 @@ class LobbyManager {
       }
     });
 
+    // 5b. Actualizar configuración de tiempos de la sala (Anfitrión)
+    socket.on('update_settings', (data) => {
+      const roomCode = this.socketToRoom.get(socket.id);
+      const game = this.games.get(roomCode);
+      if (!game) return;
+
+      const player = game.players.find(p => p.id === socket.id);
+      if (player && player.isHost && data && data.timings) {
+        game.updateTimings(data.timings);
+      }
+    });
+
     // 6. Iniciar partida
     socket.on('start_game', (data, callback) => {
       const roomCode = this.socketToRoom.get(socket.id);
